@@ -1,74 +1,97 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+type Props = {}
 
-export default function HomeScreen() {
+const array = [
+  {
+    image:'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D'
+  },
+  {
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg'
+  },
+  {
+    image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-I8sc0-8ejEAggzXAm9mxB0TmKWm24XJUQaWz-WyBgtiungnZDwvC1LaBX5CUrvLmcT4&usqp=CAU'
+  },
+  {
+    image:'https://cdn3.pixelcut.app/7/20/uncrop_hero_bdf08a8ca6.jpg'
+  },
+  {
+    image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6D6L-tO--2vsGd6XlgXwFpa3LWthJwXFmR8f7vVz7ZvBzhLSsk2Lqg1DYbuvCbBS6PBM&usqp=CAU'
+  },
+  {
+    image:'https://rszr.getimg.ai/resize?url=https%3A%2F%2Fimg1.getimg.ai%2Fgenerated%2F3bcfb5df-0400-40c2-b31d-3e8b08e29ade%2Fimg-7rFkxY2FNxXdYTStZ33D0.jpeg&type=webp&width=3840&speed=5'
+  },
+  {
+    image:'https://gratisography.com/wp-content/uploads/2024/10/gratisography-happy-cone-800x525.jpg'
+  },
+  {
+    image:'https://pixlr.com/images/generator/image-editor.webp'
+  },
+  {
+    image:'https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true'
+  },
+]
+
+const posts = [
+  {
+    id:0,
+    name:'User 1',
+    Image:'https://www.akamai.com/site/im-demo/perceptual-standard.jpg?imbypass=true',
+    description:'Just made something pretty cool Every step, every detail, every prompt wes all in this thread',
+    tags:'#Welcome #Success'
+  },
+  {
+    id:1,
+    name:'User 2',
+    Image:'https://pixlr.com/images/generator/image-editor.webp',
+    description:'Just made something pretty cool Every step, every detail, every prompt wes all in this thread',
+    tags:'#Welcome #Success'
+  },
+]
+const HomeScreen = (props: Props) => {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    <View style={styles.container}>
+      <Text></Text>
+      <View style={{width:'90%', alignSelf:'center', marginTop:20}}>
+            <FlatList
+            data={array}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{gap:10}}
+            horizontal
+            renderItem={({item,index})=>{
+              return(
+                <View >
+                  <Image style={{width:100,height:100, borderRadius:'50%',borderColor:'red',borderWidth:2}} source={{uri:item.image}}/>
+                </View>
+              )
+            }}/>
+      </View>
+      <View style={{width:'90%',flex:1,alignSelf:'center', borderColor:'black',marginTop:10}}>
+       <FlatList
+       data={posts}
+       showsVerticalScrollIndicator={false}
+       renderItem={({item,index})=>{
+        return(
+          <View style={{marginTop:20}}>
+            <Text style={{fontSize:25}}>{item.name}</Text>
+            <Image source={{uri:item.Image}} style={{width:'100%',height:290,marginTop:10, borderRadius:20}} />
+            <Text style={{fontSize:22, marginTop:10}}>{item.description}</Text>
+            <Text style={{color:'blue', fontSize:20}}>{item.tags}</Text>
+            </View>
+        )
+       }}
+       />
+      </View>
+    </View>
+  )
 }
 
+export default HomeScreen
+
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+  container: {
+   flex:1,
+   backgroundColor:'white'
+  }
+})
