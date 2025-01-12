@@ -1,10 +1,14 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
-import React from 'react';
-import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { router, useNavigation } from 'expo-router';
 
 type Props = {};
 
 const SignInScreen = (props: Props) => {
+  const  navigation = useNavigation();
+
+  const [name,setName] = useState('');
+
   return (
     <View style={styles.container}>
       <Text style={{ width: '90%', fontSize: 25, textAlign: 'center' }}>Login here!</Text>
@@ -15,6 +19,8 @@ const SignInScreen = (props: Props) => {
             placeholder="Enter Name" 
             placeholderTextColor="#888"
             style={[styles.input, { outline: 'none' }]} 
+            onChangeText={(e)=>setName(e)}
+            value={name}
             textAlign="left"  // Ensures the placeholder text is aligned left
           />
         </View>
@@ -32,6 +38,12 @@ const SignInScreen = (props: Props) => {
           onPress={() => {
             router.dismissAll(); // Close any modals or previous screens
             router.push('/(tabs)'); // Navigate to the tabs screen
+            navigation.navigate('(tabs)',{
+              screen:'index',
+              params:{
+                name:name
+              }
+            })
           }} 
           style={{ width: '98%', marginTop: 30, backgroundColor: '#1e90ff', padding: 10, justifyContent: 'center', alignSelf: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 20, color: '#fff' }}>Login</Text>
