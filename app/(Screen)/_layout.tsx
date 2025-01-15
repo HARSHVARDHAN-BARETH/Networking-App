@@ -5,6 +5,7 @@ const ScreenLayout = () => {
     <Stack>
       {/* Home screen is defined here */}
       <Stack.Screen name="Home" options={{ title: "Home Screen" , headerShown:false}} />
+      <Stack.Screen name="EditProfile" options={{ title: "Home Screen" , headerShown:false}} />
     </Stack>
   );
 };
