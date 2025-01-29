@@ -1,103 +1,112 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { router, useNavigation } from 'expo-router';
+import { useSelector } from 'react-redux';
+import type { RootState } from "./redux/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 interface LoginError {
-  email?: String | undefined,
-  password?: String | undefined
+  name?: String | undefined;
+  password?: String | undefined;
 }
-
 
 const SignInScreen = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('');
+  const users = useSelector((state: RootState) => state.users.users);
+
+
+  const saveLoginTime = async () => {
+    const loginTime = new Date().getTime(); // Current timestamp
+    await AsyncStorage.setItem("loginTime", loginTime.toString());
+  };
+  
+
+  const [name, setName] = useState('');
+  const [userId,setId] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<LoginError>({})
+  const [error, setError] = useState<LoginError>({});
 
-
-  const validation = () => {
-    var newErrors: LoginError = {};
-    console.log("email", email);
-
-    if (email.length <= 0) {
-      newErrors.email = "Email is Empty";
+  const validateInputs = () => {
+    let newErrors: LoginError = {};
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
     }
-
-    if (password.length <= 0) {
-      newErrors.password = "Enter Password"
+    if (!password.trim()) {
+      newErrors.password = "Password is required";
     }
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    console.log("password", password);
+  
+  const handleLogin = async () => {
+    if (!validateInputs()) return;
+  
+    const user = users.find(
+      (user) => user.name === name && user.password === password
+    );
+  
+    if (user) {
 
-    // setPassword(newErrors)
-    setError(newErrors)
-  }
+      Alert.alert("Login Successful", `Welcome, ${name}!`);
+      await saveLoginTime();
 
+      router.dismissAll();
+      // router.push('/(tabs)', { userId: user.id, userName: name }); // Pass userId and userName
+      navigation.navigate('timeScreen', {
+        userId: user.id,
+        userName:name
+      });
+    } else {
 
-
-  useEffect(() => {
-    validation();
-  }, [email, password])
-
-
+      Alert.alert("Login Failed", "Invalid name or password. Please try again.");
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <Text style={{ width: '90%', fontSize: 25, textAlign: 'center' }}>Login here!</Text>
       <View style={styles.box}>
-
-
-
         <View style={styles.inputRow}>
           <Image style={{ width: 50, height: 50 }} source={require('../assets/images/newsletter.png')} />
-
           <TextInput
             placeholder="Enter Name"
             placeholderTextColor="#888"
             style={[styles.input, { outline: 'none' }]}
-            onChangeText={(e) => setEmail(e)}
-            value={email}
+            onChangeText={setName}
+            value={name}
             textAlign="left"
           />
-
         </View>
-        {
-          error.email &&
-          (<Text>{error.email}</Text>)
-        }
+        {error.name && <Text style={{ color: 'red', marginLeft: 20 }}>{error.name}</Text>}
 
         <View style={styles.inputRow}>
           <Image style={{ width: 50, height: 50 }} source={require('../assets/images/password-strenght.png')} />
-
           <TextInput
             placeholder="Enter Password"
             placeholderTextColor="#888"
-            onChangeText={(e) => setPassword(e)}
+            secureTextEntry
+            onChangeText={setPassword}
             value={password}
-            secureTextEntry={true}
             style={[styles.input, { outline: 'none' }]}
             textAlign="left"
           />
         </View>
-        {
-          error.password &&
-          (<Text>{error.password}</Text>)
-        }
-
+        {error.password && <Text style={{ color: 'red', marginLeft: 20 }}>{error.password}</Text>}
 
         <TouchableOpacity
-          disabled={(error.email && error.email.length > 0) || (error.password && error.password.length > 0)}
-          onPress={() => {
-            router.dismissAll();
-            router.push('/(tabs)');
-            navigation.navigate('(tabs)', {
-              screen: 'index',
-              params: {
-                userName: name
-              }
-            })
+          onPress={handleLogin}
+          style={{
+            width: '98%',
+            marginTop: 30,
+            backgroundColor: '#1e90ff',
+            padding: 10,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            alignItems: 'center',
           }}
-          style={{ width: '98%', marginTop: 30, backgroundColor: '#1e90ff', padding: 10, justifyContent: 'center', alignSelf: 'center', alignItems: 'center' }}>
+        >
           <Text style={{ fontSize: 20, color: '#fff' }}>Login</Text>
         </TouchableOpacity>
         <Text
@@ -105,7 +114,8 @@ const SignInScreen = () => {
           onPress={() => {
             router.dismissAll();
             router.push('/signup');
-          }}>
+          }}
+        >
           Don't, have an account?
         </Text>
       </View>
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     color: 'black',
     outline: 'none',
-    textAlign: 'left',  // Ensures the text and placeholder are aligned left
+    textAlign: 'left', 
   },
   inputRow: {
     marginTop: 30,

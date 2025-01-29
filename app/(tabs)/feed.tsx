@@ -3,18 +3,25 @@ import React, { useState } from 'react';
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Array from '@/components/array';
 import AppConstants from '@/components/constants/dimensions';
-
+import UserContent from '@/components/userContent';
+import { RouteProp, useRoute } from '@react-navigation/native';
 
 const Feed = () => {
   const [searchText, setSearchText] = useState('');
   const [filteredPosts, setFilteredPosts] = useState(Array);
 
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<{ params: { userName: String, userId: String, selectedModes: String } }, 'params'>>();
+  const { userName, userId, selectedModes } = route.params || {};
+
+  const filteredContent = selectedModes.includes("All")
+    ? Object.values(UserContent).flat()
+    : selectedModes.flatMap((mode) => UserContent[mode]);
 
   const handleSearch = (text) => {
     setSearchText(text);
     if (text === '') {
-      setFilteredPosts(Array); 
+      setFilteredPosts(Array);
     } else {
       const filtered = Array.filter((item) =>
         item.name.toLowerCase().includes(text.toLowerCase())
@@ -44,21 +51,28 @@ const Feed = () => {
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.contentContainer}
           renderItem={({ item }) => (
-         <TouchableOpacity style={styles.card}
-         onPress={()=>navigation.navigate('(tabs)',{
-          screen:'profile',
-          params:{
-            photo:item.photo,
-            name:item.name,
-            bio:item.Bio,
-            image:item.image,
-            description:item.description
-          }
-         })}>
-               <Image />
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate('(Screen)', {
+                  screen: 'userProfile',
+                  params: {
+                    photo: item.photo,
+                    name: item.name,
+                    bio: item.Bio,
+                    image: item.image,
+                    description: item.description,
+                  },
+                })
+              }
+            >
+              {/* Conditionally render the image or photo */}
+              <Image
+                source={{ uri: searchText ? item.photo : item.image }}
+                style={styles.cardImage}
+              />
               <Text style={styles.cardTitle}>{item.name}</Text>
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
-         </TouchableOpacity>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id.toString()}
         />
@@ -79,7 +93,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: AppConstants.AppMargin.margin20,
     marginBottom: AppConstants.AppMargin.margint10,
-    padding:AppConstants.AppPadding.padding10,
+    padding: AppConstants.AppPadding.padding10,
   },
   searchInput: {
     fontSize: AppConstants.AppFont.fontSize20,
@@ -92,19 +106,20 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     width: '90%',
-    padding:AppConstants.AppPadding.padding10,
+    padding: AppConstants.AppPadding.padding10,
     alignSelf: 'center',
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    marginBottom: AppConstants.AppMargin.margin20,
+    marginBottom: 0,
   },
   contentContainer: {
     paddingBottom: AppConstants.AppPadding.padding20,
   },
   card: {
-    width: '45%',
+    width: '48%',
     marginBottom: 20,
+    backgroundColor: '#fff',
   },
   cardTitle: {
     fontSize: AppConstants.AppFont.fontSize15,
@@ -114,6 +129,6 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 150,
-    borderRadius: 10,
+    borderRadius: 0,
   },
 });

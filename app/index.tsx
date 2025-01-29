@@ -5,9 +5,9 @@ import AppDimension, { getFont } from "@/components/constants/dimensions";
 import AppConstants from "@/components/constants/dimensions";
 import BlueButton from "@/components/blueButton";
 
-type Props = {};
 
-const WelcomeScreen = (props: Props) => {
+
+const WelcomeScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,7 @@ const WelcomeScreen = (props: Props) => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="crimson"  />
+        <ActivityIndicator size="large" color="#1e90ff"  />
       </View>
     );
   }
@@ -29,7 +29,6 @@ const WelcomeScreen = (props: Props) => {
         <Text style={[styles.text]}>
           Networking App
         </Text>
-
         <View style={styles.box}>
           <Image style={{ width: 300, height: 300, aspectRatio: 1.2 }} resizeMode="contain" source={require('../assets/images/networking.png')} />
           <Link href="/signin" asChild>
