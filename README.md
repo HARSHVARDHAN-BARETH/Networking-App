@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome Networking Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -34,6 +34,19 @@ npm run reset-project
 ```
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Snapshots of UI
+
+## Welcome Screen
+![image](https://github.com/user-attachments/assets/3005b521-d47b-485d-9aea-1fdc35683c38)
+
+## Sign Up Screen
+![image](https://github.com/user-attachments/assets/88ec5443-c1a7-4498-b428-3358cd39df32)
+
+## Login Screen
+![image](https://github.com/user-attachments/assets/88e05acd-8b6b-4c85-95a4-1785aa0257c0)
+
+
 
 ## Learn more
 
